@@ -92,7 +92,7 @@ Para instalar o `Bottles` via `Flatpak` no `Ubuntu`, siga os passos abaixo::
     sudo systemctl reboot
     ```
 
-    ```
+    ```bash
     Note that the directories 
 
     '/var/lib/flatpak/exports/share'
@@ -147,6 +147,126 @@ Para instalar o `Bottles` no `Linux Ubuntu` sem precisar digitar linha por linha
     ```    
 
 ```
+
+## 3 Criar o _link_ para o `bottles`
+
+1. **Verificar se o `Bottles` está instalado via `Flatpak`**: Execute:
+
+    ```bash
+    flatpak list | grep bottles
+    ```
+
+    Se aparecer algo como:
+
+    `Bottles  com.usebottles.bottles  flathub`
+
+    Então está tudo certo.
+
+2. **Verificar se o arquivo `.desktop` já existe**: `Flatpak` normalmente cria automaticamente:
+
+    ```bash
+    ls ~/.local/share/flatpak/exports/share/applications/
+    ```
+
+    Ou:
+
+    ```bash
+    ls ~/.local/share/applications/ | grep bottles
+    ```
+
+    Se aparecer algo como:
+
+    ```bash
+    com.usebottles.bottles.desktop
+    ```
+
+    Então o arquivo já existe, só não está aparecendo no menu.
+
+    Nesse caso, rode:
+
+    ```bash
+    update-desktop-database ~/.local/share/applications
+    ```
+
+    Depois reinicie o `XFCE`:
+
+    ```bash
+    xfce4-panel -r
+    ```
+
+    Se ainda não aparecer, faça _logout_ e _login_.
+
+3. **Criar manualmente o atalho (método garantido)**: Se o `.desktop` não existir, vamos criar.
+
+    Crie o arquivo:
+
+    ```bash
+    nano ~/.local/share/applications/bottles.desktop
+    ```
+
+    Cole dentro:
+
+    ```bash
+    [Desktop Entry]
+    Name=Bottles
+    Comment=Gerenciador de aplicações Windows via Wine
+    Exec=flatpak run com.usebottles.bottles
+    Icon=com.usebottles.bottles
+    Terminal=false
+    Type=Application
+    Categories=Utility;
+    StartupNotify=true
+    ```
+
+    Salve.
+
+    Agora dê permissão:
+
+    ```bash
+    chmod +x ~/.local/share/applications/bottles.desktop
+    ```
+
+    Atualize o banco de dados:
+
+    ```bash
+    update-desktop-database ~/.local/share/applications
+    ```
+
+    Reinicie o painel:
+
+    ```bash
+    xfce4-panel -r
+    ```
+
+4. **Se ainda não aparecer**:
+
+    Execute:
+
+    ```bash
+    exo-desktop-item-edit --create-new ~/.local/share/applications/
+    ```
+
+    Isso abre o criador gráfico de atalhos do `XFCE`.
+
+    Preencha:
+
+    - Nome: `Bottles`
+
+    - Comando: `flatpak run com.usebottles.bottles`
+
+    - Comentário: `opcional`
+
+    Salve.
+
+**Observação importante**
+
+1. No `XFCE`, o `Whisker Menu` lê:
+
+    ```bash
+    ~/.local/share/applications/
+    ```
+
+    Se você criar em outro lugar (ex: `Desktop`), ele não aparece no menu.
 
 ## Referências
 
